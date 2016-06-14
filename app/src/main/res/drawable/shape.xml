@@ -1,0 +1,21 @@
+<!-- shape屬性設置形狀。 这里是矩形，也可以设置圆形（oval）-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="1dp"
+        android:top="1dp">
+        <shape
+            android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#80000000" />
+        </shape>
+    </item>
+    <item
+        android:bottom="1dp"
+        android:right="1dp">
+        <shape
+            android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#da87ef" />
+        </shape>
+    </item>
+</layer-list>
