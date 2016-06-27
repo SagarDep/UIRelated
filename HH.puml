@@ -1,0 +1,7 @@
+@startuml
+class First{
+    ppp
+    sss()
+
+}
+@enduml

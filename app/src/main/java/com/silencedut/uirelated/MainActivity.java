@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clip_attribute);
         TextView text = (TextView) findViewById(R.id.textView);
+        new HotChangeView(this);
 
 
 //        SpannableString spannableString = new SpannableString("这是SpannableString的测试");
