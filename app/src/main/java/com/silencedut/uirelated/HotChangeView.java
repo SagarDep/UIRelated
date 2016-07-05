@@ -5,13 +5,19 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -22,8 +28,8 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
     private View mPanelBackground;
     private View mDownView;
     private View mUpView;
-    private View mDownTextView;
-    private View mUpTextView;
+    private TextView mDownTextView;
+    private TextView mUpTextView;
 
     private ObjectAnimator mPanelAnimator;
     private ObjectAnimator mUpViewAnimator;
@@ -31,7 +37,9 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
     private ObjectAnimator mDownTextViewAnimator;
     private ObjectAnimator mUpTextViewAnimator;
     private ValueAnimator mExchangePanelAnimator;
+    private ObjectAnimator mDownViewColorSizeAnimator;
     private AnimatorSet mAllAnimatorSet;
+    private final Set<Animator> mAnimators = new HashSet<>();
     private float mOriginalPanelX;
     private float mOriginalUpViewX;
     private float mOriginalDownViewX;
@@ -49,8 +57,8 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
         mPanelBackground = findViewById(R.id.panelBackground);
         mUpView = findViewById(R.id.upPanel);
         mDownView = findViewById(R.id.downPanel);
-        mDownTextView = findViewById(R.id.downText);
-        mUpTextView = findViewById(R.id.upText);
+        mDownTextView = (TextView) findViewById(R.id.downText);
+        mUpTextView = (TextView) findViewById(R.id.upText);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -78,6 +86,7 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
         mAllAnimatorSet = new AnimatorSet();
         mAllAnimatorSet.playSequentially(animatorIn(),animatorExchangePanel(),animatorText());
         mAllAnimatorSet.start();
+        mAnimators.add(mAllAnimatorSet);
     }
 
     private ValueAnimator animatorIn() {
@@ -116,6 +125,7 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
             }
         });
         mExchangePanelAnimator.setDuration(300);
+        mAnimators.add(mExchangePanelAnimator);
         return mExchangePanelAnimator;
     }
 
@@ -132,18 +142,48 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mUpTextViewAnimator.start();
+                animatorPanel();
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                animatorOut();
+                mDownTextView.setText("1");
+                mUpTextView.setText("2");
+                mUpTextView.setBackgroundDrawable(getResources().getDrawable(R.mipmap.rank_down));
+                mDownTextView.setBackgroundDrawable(getResources().getDrawable(R.mipmap.rank_top));
             }
         });
+        mAnimators.add(mDownTextViewAnimator);
+        mAnimators.add(mUpTextViewAnimator);
         return mDownTextViewAnimator;
     }
 
-    private ValueAnimator animatorOut() {
+    private void animatorPanel() {
+        PropertyValuesHolder valuesHolder1 = PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.2f,1.0f);
+        PropertyValuesHolder valuesHolder2 = PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.2f,1.0f);
+        mDownViewColorSizeAnimator = ObjectAnimator.ofPropertyValuesHolder(mDownView,valuesHolder1,valuesHolder2);
+        mDownViewColorSizeAnimator.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+               // mDownView.setBackground();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                // mDownView.setBackground();
+                animatorOut();
+            }
+        });
+        mDownViewColorSizeAnimator.setDuration(400);
+        mDownViewColorSizeAnimator.start();
+        mAnimators.add(mDownViewColorSizeAnimator);
+    }
+
+    private void animatorOut() {
         mPanelAnimator = getInAndOutAnimator(mPanelBackground,-mPanelBackground.getRight());
         mUpViewAnimator = getInAndOutAnimator(mUpView,getRight());
         mDownViewAnimator = getInAndOutAnimator(mDownView,getRight());
@@ -155,19 +195,43 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
                 mUpViewAnimator.start();
                 mDownViewAnimator.start();
             }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                removeFromWindow();
+            }
         });
+        mPanelAnimator.setStartDelay(500);
         mPanelAnimator.start();
-        return mPanelAnimator;
     }
 
     private ObjectAnimator getInAndOutAnimator(View targetView,float targetX) {
-        return ObjectAnimator.ofFloat(targetView,"x",targetX)
+        ObjectAnimator animator =  ObjectAnimator.ofFloat(targetView,"x",targetX)
                 .setDuration(500);
+        mAnimators.add(animator);
+        return animator;
     }
 
     @Override
     public void onClick(View v) {
         animatorExchangePanel();
         playAll();
+    }
+
+    private void removeFromWindow(){
+        if(((ViewGroup)getParent())!=null) {
+            ((ViewGroup) getParent()).removeView(this);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        for(Animator animator:mAnimators) {
+            if(animator!=null&&animator.isRunning()){
+                animator.cancel();
+            }
+        }
     }
 }

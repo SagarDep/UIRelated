@@ -32,13 +32,15 @@
             android:layout_height="20dp"
             android:gravity="center"
             android:padding="2dp"
-            android:layout_margin="2dp"
-            android:background="@drawable/circle_red"
+            android:layout_marginLeft="8dp"
+            android:background="@mipmap/rank_top"
             android:text="1"
             android:textColor="@android:color/white"
             />
 
         <ImageView
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/hot_top_pro"
@@ -62,8 +64,8 @@
             android:layout_height="20dp"
             android:gravity="center"
             android:padding="2dp"
-            android:layout_margin="2dp"
-            android:background="@drawable/circle_color"
+            android:layout_marginLeft="8dp"
+            android:background="@mipmap/rank_down"
             android:text="2"
             android:textColor="@android:color/white"
             />
@@ -71,6 +73,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:src="@mipmap/hot_top_pro"
             android:id="@+id/imageView" />
     </LinearLayout>
