@@ -9,7 +9,6 @@
         android:id="@+id/textView"
         android:clickable="true"
         android:layout_gravity="center"
-        android:text="JJJJJJJ"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/bitmap"

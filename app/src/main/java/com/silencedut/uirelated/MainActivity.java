@@ -12,25 +12,28 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private HotChangeView mHotChangeView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clip_attribute);
         TextView text = (TextView) findViewById(R.id.textView);
-        new HotChangeView(this);
+        mHotChangeView =new HotChangeView(this);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHotChangeView.playAll();
+            }
+        });
 
 
-//        SpannableString spannableString = new SpannableString("这是SpannableString的测试");
-//        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.BLUE);
-//
-//        spannableString.setSpan(foregroundColorSpan,2,17, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-//        text.setText(spannableString);
     }
 
     private Bitmap drawableToBitmap(Drawable drawable) {
@@ -43,5 +46,13 @@ public class MainActivity extends AppCompatActivity {
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.textView :
+
+        }
     }
 }

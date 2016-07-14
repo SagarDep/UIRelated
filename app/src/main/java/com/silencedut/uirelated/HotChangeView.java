@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by SilenceDut on 16/6/24.
  */
 
-public class HotChangeView extends FrameLayout implements View.OnClickListener{
+public class HotChangeView extends FrameLayout{
     private View mPanelBackground;
     private View mDownView;
     private View mUpView;
@@ -64,7 +64,6 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity= Gravity.CENTER;
         activity.addContentView(this, layoutParams);
-        setOnClickListener(this);
         post(new Runnable() {
             @Override
             public void run() {
@@ -76,13 +75,12 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
                 mPanelBackground.setX(getRight());
                 mUpView.setX(-mUpView.getRight());
                 mDownView.setX(-mDownView.getRight());
-                playAll();
             }
         });
 
     }
 
-    private void playAll() {
+    public void playAll() {
         mAllAnimatorSet = new AnimatorSet();
         mAllAnimatorSet.playSequentially(animatorIn(),animatorExchangePanel(),animatorText());
         mAllAnimatorSet.start();
@@ -124,7 +122,7 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
                 mUpView.setY(mOriginalUpViewY + downViewY);
             }
         });
-        mExchangePanelAnimator.setDuration(300);
+        mExchangePanelAnimator.setDuration(1000);
         mAnimators.add(mExchangePanelAnimator);
         return mExchangePanelAnimator;
     }
@@ -208,16 +206,11 @@ public class HotChangeView extends FrameLayout implements View.OnClickListener{
 
     private ObjectAnimator getInAndOutAnimator(View targetView,float targetX) {
         ObjectAnimator animator =  ObjectAnimator.ofFloat(targetView,"x",targetX)
-                .setDuration(500);
+                .setDuration(600);
         mAnimators.add(animator);
         return animator;
     }
 
-    @Override
-    public void onClick(View v) {
-        animatorExchangePanel();
-        playAll();
-    }
 
     private void removeFromWindow(){
         if(((ViewGroup)getParent())!=null) {
