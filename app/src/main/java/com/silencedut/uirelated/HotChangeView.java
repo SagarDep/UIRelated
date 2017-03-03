@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Color;
@@ -106,6 +105,9 @@ public class HotChangeView extends FrameLayout{
     }
 
     private ValueAnimator animatorExchangePanel() {
+
+
+
         mExchangePanelAnimator = ValueAnimator.ofFloat(0,(float) (Math.PI));
         mExchangePanelAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             float angle;

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren ="false"
-
+    android:id="@+id/parent"
     >
     <TextView
         android:id="@+id/textView"
@@ -11,8 +11,36 @@
         android:layout_gravity="center"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/bitmap"
+        android:text="正在加载 ."
         />
+
+    <com.silencedut.uirelated.DraggableLayout
+        android:id="@+id/draggableLayout"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:background="#ff3f3f"
+        android:layout_gravity="center"
+        android:layout_margin="30dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon"
+            android:scaleType="fitXY"
+            />
+
+        <ImageView
+            android:id="@+id/operate"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|bottom"
+            android:layout_margin="5dp"
+            android:src="@drawable/circle_red"
+            />
+
+    </com.silencedut.uirelated.DraggableLayout>
+
+
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_gravity="center"-->
