@@ -65,8 +65,6 @@ public class DraggableLayout extends FrameLayout {
         setMeasuredDimension(widthMeasureSpec,widthMeasureSpec*3/4);
     }
 
-
-
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         if(!mInited) {
@@ -115,17 +113,27 @@ public class DraggableLayout extends FrameLayout {
 
                 if (getRight() + targetTranslationX + mHorizontalMargin < mParentWidth && getLeft() + targetTranslationX - mHorizontalMargin >= 0) {
                     setTranslationX(targetTranslationX);
+                }else if(getLeft() + targetTranslationX - mHorizontalMargin < 0) {
+                    setTranslationX(mHorizontalMargin-getLeft());
+                }else {
+                    setTranslationX(mParentWidth-getRight()-mHorizontalMargin);
                 }
 
                 if (getBottom() + targetTranslationY + mVerticalMargin < mParentHeight && getTop() + targetTranslationY - mVerticalMargin >= 0) {
                     setTranslationY(targetTranslationY);
+                }else if(getTop() + targetTranslationY - mVerticalMargin < 0) {
+                    setTranslationY(mVerticalMargin - getTop());
+                }else  {
+                    setTranslationY(mParentHeight - mVerticalMargin - getBottom());
                 }
+
+
                 break;
             case MotionEvent.ACTION_UP:
                 deltaX = x-mDownX;
                 deltaY = y- mDownY;
                 long intervalTime = System.currentTimeMillis() - mLastDownTime;
-                if(deltaX==0&&deltaY==0&&mNarrowed&&intervalTime<mLongPressTimeOut) {
+                if(Math.abs(deltaX) < mMoveSlop && Math.abs(deltaY)<mMoveSlop&&intervalTime<mLongPressTimeOut) {
                     enlargeLayout();
                 }
                 break;
